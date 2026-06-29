@@ -1,4 +1,4 @@
-##Linear regression
+# Linear regression
 
 Linear regression is a supervised learning method which creates a line of best fit for a sequence of data points, where each dimension represents a variable.
 
