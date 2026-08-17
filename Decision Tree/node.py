@@ -1,6 +1,9 @@
 class Node:
-    def __init__(self, node_condition: function):
-        self.__node_condition = node_condition
+    def __init__(self, feature, threshold):
+        self.feature = feature
+        self.threshold = threshold
 
-    def evaluate(self, answer):
-        return self.__node_condition(answer) # left for true, right for false
+        self.left = None
+        self.right = None
+        self.prediction = None
+        
