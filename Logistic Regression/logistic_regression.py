@@ -89,8 +89,3 @@ class LogisticRegression:
             self.gradient -= self.learning_rate * self.loss_d_gradient(predictions, actuals, inputs)
             self.bias -= self.learning_rate * self.loss_d_bias(predictions, actuals)
             print(loss)
-
-
-t = LogisticRegression()
-t.train([(1,1), (19,1), (-1, 0), (-15, 0), (0,1), (-4, 0), (4, 1), (6, 1), (8, 1)])
-print(t.predict(-2))
