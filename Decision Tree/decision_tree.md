@@ -1,0 +1,3 @@
+# Decision Tree
+
+A decision tree is a supervised learning technique where you provide the model with data and labels, where it then learns to ask the best questions to split the data in the purest way possible (which is determined via weighted average gini impurity) and pass down the tree given the answers to said questions. (left for True, right for False). As a result, it can successively solve some classification problems.

@@ -5,13 +5,30 @@ class Decision_Tree:
     def __init__(self):
         self.root = None
 
-    def train(self, data, labels, max_depth):
+    def train(self, data: list[list], labels: list[int], max_depth: int):
+        """Trains the decision tree by building from the root node, with a max depth.
+
+        Args:
+            data (list[list]): Data to train the data on
+            labels (list[int]): Data labels to train the data on
+            max_depth (int): The maximum depth of the decision tree to prevent overfitting
+        """        
         self.max_depth = max_depth
         data = np.array(data)
         labels = np.array(labels)
         self.root = self.build_tree(data, labels)
 
-    def build_tree(self, data, labels, depth=0):
+    def build_tree(self, data: np.array, labels: np.array, depth=0) -> Node:
+        """Recursively builds the tree, builds the left and right nodes and then the root node.
+
+        Args:
+            data (np.array): Subset of data to train the current node on
+            labels (np.array): Subset of labels to train the current node on
+            depth (int, optional): The depth of the current node. Defaults to 0.
+
+        Returns:
+            Node: The node with either the prediction or a question to compare the data to.
+        """        
         if len(np.unique(labels)) == 1: # first stopping condition
             return Node(prediction=labels[0])
         if depth >= self.max_depth:
@@ -26,7 +43,15 @@ class Decision_Tree:
         return Node(feature=feature, threshold=threshold, left=left, right=right)
         
 
-    def calculate_impurity(self, y):
+    def calculate_impurity(self, y: np.array) -> float:
+        """Calculates the gini impurity score of the given nodes labels
+
+        Args:
+            y (np.array): The labels corresponding with the current node
+
+        Returns:
+            float: The gini impurity score of the given node
+        """        
         true_counter, false_counter = (0,0)
         for d in y:
             if d == 0:
@@ -35,7 +60,16 @@ class Decision_Tree:
             true_counter += 1
         return 1 - (((true_counter/(true_counter + false_counter)) ** 2) +  ((false_counter / (true_counter + false_counter)) ** 2))
 
-    def get_best_split(self, data, labels):
+    def get_best_split(self, data: np.array, labels: np.array) -> tuple:
+        """Finds the feature and threshold combination which has the best split score to use as the node's question
+
+        Args:
+            data (np.array): Data to use the features and thresholds of
+            labels (np.array): Labels to get the scores
+
+        Returns:
+            tuple: The best feature and threshold combination as a tuple
+        """        
         best_feature = None
         best_threshold = None
         best_score = float("inf")
@@ -57,7 +91,18 @@ class Decision_Tree:
                     best_feature = feature
         return best_feature, best_threshold
 
-    def split_data(self, data, labels, feature, threshold):
+    def split_data(self, data: np.array, labels: np.array, feature: int, threshold: float) -> tuple:
+        """Splits the given data and labels on a particular question determined by feature and threshold
+
+        Args:
+            data (np.array): Data to split based on question
+            labels (np.array): Labels to split respectively with their data
+            feature (int): Feature to compare to threshold
+            threshold (float): The threshold value to compare the feature values to
+
+        Returns:
+            tuple: A tuple of the data and labels split
+        """        
         left_mask = data[:, feature] < threshold
         right_mask = data[:, feature] >= threshold
         x_left = data[left_mask]
@@ -66,14 +111,31 @@ class Decision_Tree:
         y_right = labels[right_mask]
         return x_left, y_left, x_right, y_right
 
-    def get_split_score(self, y_left, y_right):
+    def get_split_score(self, y_left: np.array, y_right: np.array) -> float:
+        """Finds the weighted average of the two children node's gini impurity scores
+
+        Args:
+            y_left (np.array): Labels belonging to left 
+            y_right (np.array): Labels belong to right
+
+        Returns:
+            float: The split score associated with the node's gini impurity scores.
+        """        
         n = len(y_left) + len(y_right)
         left_weight = len(y_left) / n
         right_weight = len(y_right) / n 
         return (left_weight * self.calculate_impurity(y_left)) + (right_weight * self.calculate_impurity(y_right))    
 
 
-    def predict(self, data):
+    def predict(self, data: np.array) -> int:
+        """Uses the trained decision tree to classify the data based on its features and learnt thresholds.
+
+        Args:
+            data (np.array): Data to use to traverse the tree
+
+        Returns:
+            int: The classification predicted by the model.
+        """        
         current_node = self.root
         while current_node.prediction is None:
             feature = current_node.feature
@@ -85,14 +147,30 @@ class Decision_Tree:
         return current_node.prediction
 
 
-    def get_mid_points(self, data: list):
+    def get_mid_points(self, data: list[float]) -> list[float]:
+        """Gets the midpoints between consecutive pieces of data in a sorted manner.
+
+        Args:
+            data (list[float]): Data to find the midpoints of
+
+        Returns:
+            list[float]: The midpoints of the provided data.
+        """        
         data = sorted(set(data))
         mid_points = []
         for i in range(len(data) -1):
             mid_points.append((data[i] + data[i+1]) / 2)
         return mid_points
 
-    def get_most_common_class(self, labels):
+    def get_most_common_class(self, labels: np.array) -> int:
+        """Gets the most common classification on a list of labels
+
+        Args:
+            labels (np.array): The list of labels to find the most common classification with
+
+        Returns:
+            int: The most common classification
+        """        
         classes, counts = np.unique(labels, return_counts=True)
         return classes[np.argmax(counts)]
 
