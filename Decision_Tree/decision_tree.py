@@ -1,5 +1,5 @@
 import numpy as np
-from node import Node
+from Decision_Tree.node import Node
 
 class Decision_Tree:
     def __init__(self):

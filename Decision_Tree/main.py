@@ -1,4 +1,4 @@
-from decision_tree import Decision_Tree
+from Decision_Tree.decision_tree import Decision_Tree
 def main():
     decision_tree = Decision_Tree()
     training_data = [
