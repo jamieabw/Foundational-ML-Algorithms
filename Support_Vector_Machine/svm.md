@@ -1,0 +1,3 @@
+# Support Vector Machine
+
+An SVM creates a decision boundary (in this 2D case, a line) which splits the data into 2 classifications as well as it can. It also maximises the margin of each side of the decision boundary, the margin is the distance from the decision boundary to the support vectors (the closest data points). It is a supervised learning technique which predicts classifications based on which side the data point lies on from the decision boundary.
